@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-const double CAMERA_ZOOM = 3;
+const double CAMERA_ZOOM = 20;
 const double CAMERA_TILT = 0;
 const double CAMERA_BEARING = 30;
 LatLng SOURCE_LOCATION = LatLng(33.513833, 36.276526);

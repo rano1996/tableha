@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:treva_shop_flutter/Library/countdown/countdown.dart';
 import 'package:treva_shop_flutter/ListItem/HomeGridItemRecomended.dart';
@@ -58,13 +59,18 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   /// To set duration initState auto start if FlashSale Layout open
   @override
   void initState() {
-    hours = new CountDown(new Duration(hours: 24));
-    minutes = new CountDown(new Duration(hours: 1));
-    seconds = new CountDown(new Duration(minutes: 1));
-
-//    onStartStopPress();
+    getFar();
     // TODO: implement initState
     super.initState();
+  }
+
+  getFar() async {
+    print("I'm in side function getFar");
+    var locationParameter =
+        "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998 &destinations=40.6905615%2C,-73.9976592 &key=AIzaSyCnVpXn6mj7hkVtJzZObJA2XHx-iGnBpaY";
+    Dio dio = new Dio();
+    Response response = await dio.get(locationParameter);
+    print("response fro far is ${response.data}");
   }
 
   @override

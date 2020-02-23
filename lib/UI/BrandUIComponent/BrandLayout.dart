@@ -17,9 +17,10 @@ class brand extends StatefulWidget {
   _brandState createState() => _brandState();
 }
 
-const double CAMERA_ZOOM = 20;
+const double CAMERA_ZOOM = 11;
 const double CAMERA_TILT = 0;
 const double CAMERA_BEARING = 30;
+LatLng SOURCE_LOCATION = LatLng(33.513833, 36.276526);
 
 class _brandState extends State<brand> {
   Completer<GoogleMapController> _controller = Completer();
@@ -43,16 +44,20 @@ class _brandState extends State<brand> {
     // TODO: implement initState
     super.initState();
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
       setState(() {
         _currentPosition = position;
+        print("i get you loaction $_currentPosition");
+        SOURCE_LOCATION =
+            LatLng(_currentPosition.latitude, _currentPosition.longitude);
+        print("so your source is $SOURCE_LOCATION");
       });
     }).catchError((e) {
       print(e);
     });
+//    setMapPins();
   }
 
   @override
@@ -67,7 +72,7 @@ class _brandState extends State<brand> {
       zoom: CAMERA_ZOOM,
       bearing: CAMERA_BEARING,
       tilt: CAMERA_TILT,
-      target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+      target: SOURCE_LOCATION,
     );
     return Scaffold(
       backgroundColor: Colors.white,
@@ -77,21 +82,19 @@ class _brandState extends State<brand> {
         color: Colors.white,
         child: Stack(
           children: <Widget>[
-            SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(top: mediaQueryData.padding.top + 5.5),
-                child: GoogleMap(
-                    myLocationEnabled: true,
-                    compassEnabled: true,
-                    tiltGesturesEnabled: false,
-                    markers: _markers,
-                    polylines: _polylines,
-                    mapType: MapType.satellite,
-                    initialCameraPosition: initialLocation,
-                    onMapCreated: onMapCreated),
-              ),
+            Container(
+              height: MediaQuery.of(context).size.height - 60,
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(top: mediaQueryData.padding.top + 59.0),
+              child: GoogleMap(
+                  myLocationEnabled: true,
+                  compassEnabled: true,
+                  tiltGesturesEnabled: false,
+                  markers: _markers,
+                  polylines: _polylines,
+                  mapType: MapType.satellite,
+                  initialCameraPosition: initialLocation,
+                  onMapCreated: onMapCreated),
             ),
             AppBar(context, statusBarHeight),
           ],
@@ -108,10 +111,23 @@ class _brandState extends State<brand> {
   }
 
   void setMapPins() {
+    print("toto0 is $makers");
+    var markers = (data as List)
+        .map((i) =>
+            LatLng(double.parse(i["latitude"]), double.parse(i["longitude"])))
+        .toList();
+    print("markers is $markers");
+
     setState(() {
       // source pin
-      makers.map((i) => _markers.add(Marker(
-          markerId: MarkerId('sourcePin${i}'), position: i, icon: sourceIcon)));
+      markers.forEach((i) {
+        print("your maker position ist $i");
+        _markers.add(Marker(
+            markerId: MarkerId('sourcePin${i}'),
+            position: i,
+            icon: sourceIcon));
+        print("your full makers is $_markers");
+      });
     });
   }
 

@@ -170,7 +170,7 @@ List<Map<String, dynamic>> data = [
 
 List<resItem> res = (data as List).map((i) => resItem.fromJson(i)).toList();
 
-List<LatLng> makers;
-
-var val = (data as List).map((i) =>
-    makers.add(LatLng(double.parse(i.latitude), double.parse(i.longitude))));
+List<LatLng> makers = (data as List)
+    .map((i) =>
+        LatLng(double.parse(i["latitude"]), double.parse(i["longitude"])))
+    .toList();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:treva_shop_flutter/UI/AcountUIComponent/SettingAcount.dart';
 import 'package:treva_shop_flutter/UI/HomeUIComponent/Search.dart';
 import 'package:treva_shop_flutter/UI/HomeUIComponent/favoritePage.dart';
+import 'package:treva_shop_flutter/UI/LoginOrSignup/login&signup.dart';
 import 'package:treva_shop_flutter/UI/help/colors.dart';
 
 class profil extends StatefulWidget {
@@ -37,6 +38,13 @@ class _profilState extends State<profil> {
                       sub3: "Invite Friends To Install Table.ha",
                       sub4: "Log Out",
                     ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => signup()));
+                      },
+                      child: Text("Signup"),
+                    )
                   ],
                 ),
               ),
