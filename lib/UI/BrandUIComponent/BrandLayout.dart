@@ -17,7 +17,7 @@ class brand extends StatefulWidget {
   _brandState createState() => _brandState();
 }
 
-const double CAMERA_ZOOM = 11;
+const double CAMERA_ZOOM = 15;
 const double CAMERA_TILT = 0;
 const double CAMERA_BEARING = 30;
 LatLng SOURCE_LOCATION = LatLng(33.513833, 36.276526);

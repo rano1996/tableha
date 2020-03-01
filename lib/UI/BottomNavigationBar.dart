@@ -19,6 +19,7 @@ class _bottomNavigationBarState extends State<bottomNavigationBar> {
         return new Menu();
       case 1:
         return new brand();
+//        return new MainMap();
       case 2:
         return new profil();
         break;

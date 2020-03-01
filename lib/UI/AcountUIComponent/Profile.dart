@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treva_shop_flutter/UI/AcountUIComponent/SettingAcount.dart';
 import 'package:treva_shop_flutter/UI/HomeUIComponent/Search.dart';
 import 'package:treva_shop_flutter/UI/HomeUIComponent/favoritePage.dart';
 import 'package:treva_shop_flutter/UI/LoginOrSignup/login&signup.dart';
 import 'package:treva_shop_flutter/UI/help/colors.dart';
+import 'package:treva_shop_flutter/bloc/authentication.dart';
 
 class profil extends StatefulWidget {
   @override
@@ -11,6 +13,36 @@ class profil extends StatefulWidget {
 }
 
 class _profilState extends State<profil> {
+  String _tokenString;
+  bool isLoggedin = false;
+  @override
+  void initState() {
+    isLogin();
+    authBloc.restoreSession();
+    super.initState();
+  }
+
+  isLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _tokenString = prefs.get("token");
+    print("i have return token and he is $_tokenString");
+    if (_tokenString != null) {
+      setState(() {
+        isLoggedin = true;
+      });
+    } else {
+      setState(() {
+        isLoggedin = false;
+      });
+    }
+    print("yes it's ok");
+  }
+
+  _navigate() {
+    Navigator.of(context).pushReplacement(
+        PageRouteBuilder(pageBuilder: (_, __, ___) => signup()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
@@ -18,42 +50,45 @@ class _profilState extends State<profil> {
     /// Declare MediaQueryData
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return !isLoggedin
+        ? signup()
+        : Scaffold(
+            backgroundColor: Colors.white,
 
-      /// Use Stack to costume a appbar
-      body: Container(
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(top: mediaQueryData.padding.top + 5.5),
-                child: Column(
-                  children: <Widget>[
-                    setting(
-                      head: "",
-                      sub1: "My Profile",
-                      sub2: "Contact Us",
-                      sub3: "Invite Friends To Install Table.ha",
-                      sub4: "Log Out",
+            /// Use Stack to costume a appbar
+            body: Container(
+              color: Colors.white,
+              child: Stack(
+                children: <Widget>[
+                  SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: mediaQueryData.padding.top + 5.5),
+                      child: Column(
+                        children: <Widget>[
+                          setting(
+                            head: "",
+                            sub1: "My Profile",
+                            sub2: "Contact Us",
+                            sub3: "Invite Friends To Install Table.ha",
+                            sub4: "Log Out",
+                          ),
+//                    InkWell(
+//                      onTap: () {
+//                        Navigator.of(context).push(PageRouteBuilder(
+//                            pageBuilder: (_, __, ___) => signup()));
+//                      },
+//                      child: Text("Signup"),
+//                    )
+                        ],
+                      ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => signup()));
-                      },
-                      child: Text("Signup"),
-                    )
-                  ],
-                ),
+                  ),
+                  AppBar(context, statusBarHeight),
+                ],
               ),
             ),
-            AppBar(context, statusBarHeight),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
 

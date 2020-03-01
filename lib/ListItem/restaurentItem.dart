@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treva_shop_flutter/UI/HomeUIComponent/myMap.dart';
 import 'package:treva_shop_flutter/UI/HomeUIComponent/restaurentDeails.dart';
+import 'package:treva_shop_flutter/UI/LoginOrSignup/login&signup.dart';
 import 'package:treva_shop_flutter/UI/help/colors.dart';
 import 'package:treva_shop_flutter/models/restaurentItem.dart';
 
@@ -209,31 +211,54 @@ class _RestaurentItemState extends State<RestaurentItem> {
 //                                    size: 17,
 //                                  );
                                   return InkWell(
-                                    onTap: () {
-                                      print('$index');
-                                      setState(() {
-                                        print('before ${widget.item.rate}');
-                                        if (index + 1 > widget.item.rate) {
-                                          int newValue =
-                                              (index + 1) - widget.item.rate;
-                                          int indexInArr =
-                                              res.indexOf(widget.item);
-                                          res[indexInArr].rate =
-                                              widget.item.rate + newValue;
-                                          print('after ${widget.item.rate}');
-                                          print('newValue ${newValue}');
-                                        } else if (index + 1 <
-                                            widget.item.rate) {
-                                          int newValue =
-                                              widget.item.rate - (index);
-                                          int indexInArr =
-                                              res.indexOf(widget.item);
-                                          res[indexInArr].rate =
-                                              widget.item.rate - newValue;
-                                          print('after ${widget.item.rate}');
-                                          print('newValue ${newValue}');
-                                        }
-                                      });
+                                    onTap: () async {
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      var _tokenString = prefs.get("token");
+                                      if (_tokenString != null) {
+                                        print('$index');
+                                        setState(() {
+                                          print('before ${widget.item.rate}');
+                                          if (index + 1 > widget.item.rate) {
+                                            int newValue =
+                                                (index + 1) - widget.item.rate;
+                                            int indexInArr =
+                                                res.indexOf(widget.item);
+                                            res[indexInArr].rate =
+                                                widget.item.rate + newValue;
+                                            print('after ${widget.item.rate}');
+                                            print('newValue ${newValue}');
+                                          } else if (index + 1 <
+                                              widget.item.rate) {
+                                            int newValue =
+                                                widget.item.rate - (index);
+                                            int indexInArr =
+                                                res.indexOf(widget.item);
+                                            res[indexInArr].rate =
+                                                widget.item.rate - newValue;
+                                            print('after ${widget.item.rate}');
+                                            print('newValue ${newValue}');
+                                          }
+                                        });
+                                      } else {
+                                        Navigator.of(context).push(
+                                          PageRouteBuilder(
+                                              pageBuilder: (_, __, ___) =>
+                                                  signup()
+
+                                              /// transtation duration in animation
+//                          transitionDuration: Duration(milliseconds: 750),
+
+                                              /// animation route to search layout
+//                          transitionsBuilder: (_, Animation<double> animation,
+//                              __, Widget child) {
+//                            return Opacity(
+//                              opacity: animation.value,
+//                              child: child,
+//                            );
+                                              ),
+                                        );
+                                      }
                                     },
                                     child: Image.asset(
                                       index < widget.item.rate
@@ -255,16 +280,24 @@ class _RestaurentItemState extends State<RestaurentItem> {
                             //favorite
                             Container(
                               child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    print(
-                                        "before favorite ${widget.item.isFav}");
-                                    widget.item.isFav = !widget.item.isFav;
-                                    int index = res.indexOf(widget.item);
-                                    res[index].isFav = widget.item.isFav;
-                                    print(
-                                        "after favorite ${widget.item.isFav}");
-                                  });
+                                onTap: () async {
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  var _tokenString = prefs.get("token");
+                                  if (_tokenString != null) {
+                                    setState(() {
+                                      print(
+                                          "before favorite ${widget.item.isFav}");
+                                      widget.item.isFav = !widget.item.isFav;
+                                      int index = res.indexOf(widget.item);
+                                      res[index].isFav = widget.item.isFav;
+                                      print(
+                                          "after favorite ${widget.item.isFav}");
+                                    });
+                                  } else {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) => signup()));
+                                  }
                                 },
                                 child: widget.item.isFav
                                     ? Image.asset(
